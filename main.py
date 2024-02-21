@@ -74,7 +74,7 @@ root.title("Python Text Editor")
 menu = tk.Menu(root)
 root.config(menu=menu)
 
-file_menu = tk.Menu(menu)
+file_menu = tk.Menu(menu, tearoff=0)
 menu.add_cascade(label="File", menu=file_menu)
 file_menu.add_command(label="New", command=new_file)
 file_menu.add_command(label="Open", command=open_file)
@@ -84,7 +84,7 @@ file_menu.add_command(label="Toggle Line Numbers", command=toggle_line_numbers) 
 file_menu.add_command(label="Exit", command=root.quit)
 
 # Edit Menu
-edit_menu = tk.Menu(menu)
+edit_menu = tk.Menu(menu, tearoff=0)
 menu.add_cascade(label="Edit", menu=edit_menu)
 edit_menu.add_command(label="Select All", command=select_all)
 edit_menu.add_command(label="Copy", command=copy)
