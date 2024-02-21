@@ -1,5 +1,7 @@
 # Python Text Editor
 
+![Screenshot 2024-02-21 101837](https://github.com/danieldotwav/Python-Text-Editor/assets/31682816/dde5b51a-0be2-4df4-ba80-d56135b00e17)
+
 This Python Text Editor is a simple, lightweight text editor built with Tkinter. It's designed for basic text editing purposes, allowing you to create, open, and save text files with ease. This editor is perfect for quick edits to text files without the need for complex features found in full-fledged text editors.
 
 ## Features
