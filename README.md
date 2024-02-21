@@ -4,7 +4,24 @@ This Python Text Editor is a simple, lightweight text editor built with Tkinter.
 
 ## Features
 
-- **New File**: Clears the current text area, allowing you to start with a blank canvas.
-- **Open File**: Lets you open and edit `.txt` files from your local storage.
-- **Save File**: Save your current work to a new or existing `.txt` file.
-- **Exit**: Closes the application.
+### Text Editing
+- Open, edit, and save text files with the classic `File` menu options.
+- Undo and Redo functionality for easy error correction.
+- Basic text manipulation with Cut, Copy, and Paste actions.
+- Select All text with a single menu option for quick modifications.
+
+### Customization
+- Toggle line numbers on or off for a more streamlined or detailed view.
+
+### Line Numbers
+- Dynamic line numbers that update with your text for better reference and navigation.
+
+### Keyboard Shortcuts
+- Common keyboard shortcuts for all edit actions (dependent on platform-specific implementation).
+
+### User Interface
+- Simple and intuitive interface for a distraction-free writing and coding experience.
+- Resizable window to accommodate different screen sizes and user preferences.
+
+### Accessibility
+- Text area with word wrap for better readability of long lines.

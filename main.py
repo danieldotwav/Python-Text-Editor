@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import filedialog
 
+# Features
+
 class LineNumberCanvas(tk.Canvas):
     def __init__(self, *args, **kwargs):
         tk.Canvas.__init__(self, *args, **kwargs)
@@ -47,11 +49,28 @@ def save_file():
         with open(file_path, "w") as file:
             file.write(text.get(1.0, tk.END))
 
+def select_all():
+    text.tag_add('sel', '1.0', 'end')
+
+def copy():
+    if text.tag_ranges('sel'):
+        text.clipboard_clear()
+        text.clipboard_append(text.get(tk.SEL_FIRST, tk.SEL_LAST))
+
+def paste():
+    if text.selection_get(selection='CLIPBOARD'):
+        text.insert(tk.INSERT, text.selection_get(selection='CLIPBOARD'))
+
+def cut():
+    if text.tag_ranges('sel'):
+        copy()
+        text.delete(tk.SEL_FIRST, tk.SEL_LAST)
+
 # Main Window
 root = tk.Tk()
 root.title("Python Text Editor")
 
-# Menu
+# File Menu
 menu = tk.Menu(root)
 root.config(menu=menu)
 
@@ -64,6 +83,17 @@ file_menu.add_separator()
 file_menu.add_command(label="Toggle Line Numbers", command=toggle_line_numbers)  # Toggle line numbers
 file_menu.add_command(label="Exit", command=root.quit)
 
+# Edit Menu
+edit_menu = tk.Menu(menu)
+menu.add_cascade(label="Edit", menu=edit_menu)
+edit_menu.add_command(label="Select All", command=select_all)
+edit_menu.add_command(label="Copy", command=copy)
+edit_menu.add_command(label="Paste", command=paste)
+edit_menu.add_command(label="Cut", command=cut)
+edit_menu.add_separator()
+edit_menu.add_command(label="Undo", command=lambda: text.edit_undo())
+edit_menu.add_command(label="Redo", command=lambda: text.edit_redo())
+
 # Line Numbers
 line_numbers = LineNumberCanvas(root, width=30)
 line_numbers.pack(side="left", fill="y")
@@ -71,6 +101,9 @@ line_numbers.pack(side="left", fill="y")
 # Text Area
 text = tk.Text(root, wrap=tk.WORD)
 text.pack(expand=True, fill="both")
+
+# Enable Undo/Redo Feature
+text.config(undo=True)
 
 # Attach text widget to line numbers
 line_numbers.attach(text)
