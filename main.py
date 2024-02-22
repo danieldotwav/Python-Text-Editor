@@ -3,6 +3,7 @@ from tkinter import filedialog
 from tkinter import simpledialog
 
 # Main Window
+
 root = tk.Tk()
 root.title("Python Text Editor")
 
@@ -75,8 +76,7 @@ def paste():
             # If there's no selected text, just insert at the current position
             text.insert(tk.INSERT, selected_text)
     except tk.TclError:
-        # This catches the exception if there's no text in the clipboard
-        pass
+        pass # Catch the exception if there's no text in the clipboard
 
 def cut():
     if text.tag_ranges('sel'):
@@ -123,6 +123,7 @@ def open_find_replace_dialog():
     dialog = FindReplaceDialog(root)
     root.wait_window(dialog)  # This will wait until the dialog window is closed.
 
+
 # Define the add-shortcut function
 
 def add_shortcut(key, func):
@@ -141,6 +142,7 @@ add_shortcut('<Control-v>', paste)
 add_shortcut('<Control-l>', toggle_line_numbers)
 
 # File Menu
+
 menu = tk.Menu(root)
 root.config(menu=menu)
 
@@ -157,6 +159,7 @@ file_menu.add_separator()
 file_menu.add_command(label="Exit", command=root.quit)
 
 # Edit Menu
+
 edit_menu = tk.Menu(menu, tearoff=0)
 menu.add_cascade(label="Edit", menu=edit_menu)
 edit_menu.add_command(label="Undo", command=lambda: text.edit_undo(), accelerator="Ctrl+Z")
@@ -172,22 +175,28 @@ edit_menu.add_command(label="Select All", command=select_all, accelerator="Ctrl+
 edit_menu.add_command(label="Find and Replace", command=open_find_replace_dialog, accelerator="Ctrl+F")
 
 # Line Numbers
+
 line_numbers = LineNumberCanvas(root, width=30)
 line_numbers.pack(side="left", fill="y")
 
 # Text Area
+
 text = tk.Text(root, wrap=tk.WORD)
 text.pack(expand=True, fill="both")
 
 # Enable Undo/Redo Feature
+
 text.config(undo=True)
 
 # Attach text widget to line numbers
+
 line_numbers.attach(text)
 
 # Redraw line numbers on text change
+
 text.bind("<KeyRelease>", lambda event: line_numbers.redraw())
 text.bind("<MouseWheel>", lambda event: line_numbers.redraw())
 
 # GUI Main Loop
+
 root.mainloop()
