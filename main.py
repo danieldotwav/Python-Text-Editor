@@ -2,6 +2,10 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import simpledialog
 
+# Main Window
+root = tk.Tk()
+root.title("Python Text Editor")
+
 # Features
 
 class LineNumberCanvas(tk.Canvas):
@@ -59,8 +63,20 @@ def copy():
         text.clipboard_append(text.get(tk.SEL_FIRST, tk.SEL_LAST))
 
 def paste():
-    if text.selection_get(selection='CLIPBOARD'):
-        text.insert(tk.INSERT, text.selection_get(selection='CLIPBOARD'))
+    try:
+        selected_text = text.selection_get(selection='CLIPBOARD')
+        if text.tag_ranges('sel'):
+            # If there's selected text, replace it with clipboard contents
+            start = text.index(tk.SEL_FIRST)
+            end = text.index(tk.SEL_LAST)
+            text.delete(start, end)
+            text.insert(start, selected_text)
+        else:
+            # If there's no selected text, just insert at the current position
+            text.insert(tk.INSERT, selected_text)
+    except tk.TclError:
+        # This catches the exception if there's no text in the clipboard
+        pass
 
 def cut():
     if text.tag_ranges('sel'):
@@ -107,11 +123,22 @@ def open_find_replace_dialog():
     dialog = FindReplaceDialog(root)
     root.wait_window(dialog)  # This will wait until the dialog window is closed.
 
+# Define the add-shortcut function
 
+def add_shortcut(key, func):
+    root.bind(key, lambda event: func())
 
-# Main Window
-root = tk.Tk()
-root.title("Python Text Editor")
+# Bind shortcuts to these functions
+
+add_shortcut('<Control-n>', new_file)
+add_shortcut('<Control-o>', open_file)
+add_shortcut('<Control-s>', save_file)
+add_shortcut('<Control-a>', select_all)
+add_shortcut('<Control-f>', open_find_replace_dialog)
+add_shortcut('<Control-x>', cut)
+add_shortcut('<Control-c>', copy)
+add_shortcut('<Control-v>', paste)
+add_shortcut('<Control-l>', toggle_line_numbers)
 
 # File Menu
 menu = tk.Menu(root)
@@ -119,27 +146,30 @@ root.config(menu=menu)
 
 file_menu = tk.Menu(menu, tearoff=0)
 menu.add_cascade(label="File", menu=file_menu)
-file_menu.add_command(label="New", command=new_file)
-file_menu.add_command(label="Open", command=open_file)
-file_menu.add_command(label="Save", command=save_file)
+file_menu.add_command(label="New", command=new_file, accelerator="Ctrl+N")
+file_menu.add_command(label="Open", command=open_file, accelerator="Ctrl+O")
+file_menu.add_command(label="Save", command=save_file, accelerator="Ctrl+S")
 file_menu.add_separator()
-file_menu.add_command(label="Toggle Line Numbers", command=toggle_line_numbers)  # Toggle line numbers
+
+file_menu.add_command(label="Toggle Line Numbers", command=toggle_line_numbers, accelerator="Ctrl+L")
+file_menu.add_separator()
+
 file_menu.add_command(label="Exit", command=root.quit)
 
 # Edit Menu
 edit_menu = tk.Menu(menu, tearoff=0)
 menu.add_cascade(label="Edit", menu=edit_menu)
-edit_menu.add_command(label="Undo", command=lambda: text.edit_undo())
+edit_menu.add_command(label="Undo", command=lambda: text.edit_undo(), accelerator="Ctrl+Z")
+edit_menu.add_command(label="Redo", command=lambda: text.edit_redo(), accelerator="Ctrl+Y")
 edit_menu.add_separator()
 
-edit_menu.add_command(label="Cut", command=cut)
-edit_menu.add_command(label="Copy", command=copy)
-edit_menu.add_command(label="Paste", command=paste)
+edit_menu.add_command(label="Cut", command=cut, accelerator="Ctrl+X")
+edit_menu.add_command(label="Copy", command=copy, accelerator="Ctrl+C")
+edit_menu.add_command(label="Paste", command=paste, accelerator="Ctrl+V")
 edit_menu.add_separator()
 
-edit_menu.add_command(label="Redo", command=lambda: text.edit_redo())
-edit_menu.add_command(label="Select All", command=select_all)
-edit_menu.add_command(label="Find and Replace", command=open_find_replace_dialog)
+edit_menu.add_command(label="Select All", command=select_all, accelerator="Ctrl+A")
+edit_menu.add_command(label="Find and Replace", command=open_find_replace_dialog, accelerator="Ctrl+F")
 
 # Line Numbers
 line_numbers = LineNumberCanvas(root, width=30)
