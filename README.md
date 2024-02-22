@@ -11,6 +11,7 @@ This Python Text Editor is a simple, lightweight text editor built with Tkinter.
 - Undo and Redo functionality for easy error correction.
 - Basic text manipulation with Cut, Copy, and Paste actions.
 - Select All text with a single menu option for quick modifications.
+- Find and Replace feature.
 
 ### Customization
 - Toggle line numbers on or off for a more streamlined or detailed view.

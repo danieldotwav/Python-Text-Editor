@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import simpledialog
 
 # Features
 
@@ -66,6 +67,48 @@ def cut():
         copy()
         text.delete(tk.SEL_FIRST, tk.SEL_LAST)
 
+# Custom Find and Replace Dialog Box
+class FindReplaceDialog(tk.Toplevel):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.title("Find and Replace")
+
+        # Find field
+        self.find_label = tk.Label(self, text="Find:")
+        self.find_label.grid(row=0, column=0, padx=10, pady=5)
+        self.find_entry = tk.Entry(self)
+        self.find_entry.grid(row=0, column=1, padx=10, pady=5)
+
+        # Replace field
+        self.replace_label = tk.Label(self, text="Replace with:")
+        self.replace_label.grid(row=1, column=0, padx=10, pady=5)
+        self.replace_entry = tk.Entry(self)
+        self.replace_entry.grid(row=1, column=1, padx=10, pady=5)
+
+        # Replace button
+        self.replace_button = tk.Button(self, text="Replace", command=self.replace)
+        self.replace_button.grid(row=2, column=0, padx=10, pady=5)
+
+        # Cancel button
+        self.cancel_button = tk.Button(self, text="Cancel", command=self.destroy)
+        self.cancel_button.grid(row=2, column=1, padx=10, pady=5)
+
+    def replace(self):
+        find_text = self.find_entry.get()
+        replace_text = self.replace_entry.get()
+        if find_text and replace_text:
+            content = text.get(1.0, tk.END)
+            new_content = content.replace(find_text, replace_text)
+            text.delete(1.0, tk.END)
+            text.insert(1.0, new_content)
+        self.destroy()
+
+def open_find_replace_dialog():
+    dialog = FindReplaceDialog(root)
+    root.wait_window(dialog)  # This will wait until the dialog window is closed.
+
+
+
 # Main Window
 root = tk.Tk()
 root.title("Python Text Editor")
@@ -86,13 +129,17 @@ file_menu.add_command(label="Exit", command=root.quit)
 # Edit Menu
 edit_menu = tk.Menu(menu, tearoff=0)
 menu.add_cascade(label="Edit", menu=edit_menu)
-edit_menu.add_command(label="Select All", command=select_all)
+edit_menu.add_command(label="Undo", command=lambda: text.edit_undo())
+edit_menu.add_separator()
+
+edit_menu.add_command(label="Cut", command=cut)
 edit_menu.add_command(label="Copy", command=copy)
 edit_menu.add_command(label="Paste", command=paste)
-edit_menu.add_command(label="Cut", command=cut)
 edit_menu.add_separator()
-edit_menu.add_command(label="Undo", command=lambda: text.edit_undo())
+
 edit_menu.add_command(label="Redo", command=lambda: text.edit_redo())
+edit_menu.add_command(label="Select All", command=select_all)
+edit_menu.add_command(label="Find and Replace", command=open_find_replace_dialog)
 
 # Line Numbers
 line_numbers = LineNumberCanvas(root, width=30)
