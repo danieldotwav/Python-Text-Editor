@@ -1,6 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog
-
+from tkinter import filedialog, Text, Menu
 
 # Main Window
 
@@ -124,11 +123,48 @@ def open_find_replace_dialog():
     dialog = FindReplaceDialog(root)
     root.wait_window(dialog)  # This will wait until the dialog window is closed.
 
-
-# Define the add-shortcut function
-
 def add_shortcut(key, func):
     root.bind(key, lambda event: func())
+
+
+#### Dark Mode Feature ####
+
+# Color schemes
+light_mode = {
+    "text_bg": "#FFFFFF",  # White background for the text area
+    "text_fg": "#000000",  # Black text color
+    "sidebar_bg": "#F0F0F0",  # Light background for line numbers
+    "sidebar_fg": "#000000",  # Black color for line numbers
+    "menu_bg": "#F0F0F0",  # Light background for the menu
+    "menu_fg": "#000000",  # Black text color for the menu
+}
+
+dark_mode = {
+    "text_bg": "#333333",  # Dark background for the text area
+    "text_fg": "#CCCCCC",  # Light grey text color
+    "sidebar_bg": "#1E1E1E",  # Dark background for line numbers
+    "sidebar_fg": "#FFFFFF",  # White color for line numbers
+    "menu_bg": "#1E1E1E",  # Dark background for the menu
+    "menu_fg": "#CCCCCC",  # Light grey text color for the menu
+}
+
+# Current mode starts as light mode
+current_mode = "light"
+
+def toggle_dark_mode():
+    global current_mode
+    # Toggle between 'light' and 'dark'
+    current_mode = 'dark' if current_mode == 'light' else 'light'
+    color_scheme = dark_mode if current_mode == 'dark' else light_mode
+    
+    # Apply color scheme to text widget and line numbers
+    text.config(bg=color_scheme["text_bg"], fg=color_scheme["text_fg"], insertbackground=color_scheme["text_fg"])
+    line_numbers.config(bg=color_scheme["sidebar_bg"], fg=color_scheme["sidebar_fg"])
+    
+    # Update the colors for the menu and all of its children
+    menu.config(bg=color_scheme["menu_bg"], fg=color_scheme["menu_fg"])
+    for menu_item in menu.winfo_children():
+        menu_item.config(bg=color_scheme["menu_bg"], fg=color_scheme["menu_fg"])
 
 # Bind shortcuts to these functions
 
@@ -174,6 +210,12 @@ edit_menu.add_separator()
 
 edit_menu.add_command(label="Select All", command=select_all, accelerator="Ctrl+A")
 edit_menu.add_command(label="Find and Replace", command=open_find_replace_dialog, accelerator="Ctrl+F")
+
+# View Menu
+
+view_menu = tk.Menu(menu, tearoff=0)
+menu.add_cascade(label="View", menu=view_menu)
+view_menu.add_command(label="Toggle Dark Mode", command=toggle_dark_mode)
 
 # Line Numbers
 line_numbers = LineNumberCanvas(root, width=30)
