@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
-from tkinter import simpledialog
+
 
 # Main Window
 
@@ -41,6 +41,7 @@ def toggle_line_numbers():
 
 def new_file():
     text.delete(1.0, tk.END)
+    line_numbers.redraw()  # Reset Numbers
 
 def open_file():
     file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
@@ -175,28 +176,25 @@ edit_menu.add_command(label="Select All", command=select_all, accelerator="Ctrl+
 edit_menu.add_command(label="Find and Replace", command=open_find_replace_dialog, accelerator="Ctrl+F")
 
 # Line Numbers
-
 line_numbers = LineNumberCanvas(root, width=30)
 line_numbers.pack(side="left", fill="y")
 
 # Text Area
-
 text = tk.Text(root, wrap=tk.WORD)
 text.pack(expand=True, fill="both")
 
 # Enable Undo/Redo Feature
-
 text.config(undo=True)
 
 # Attach text widget to line numbers
-
 line_numbers.attach(text)
 
-# Redraw line numbers on text change
+# Initial redraw to display line number 1 before typing
+line_numbers.redraw()
 
+# Redraw line numbers on text change
 text.bind("<KeyRelease>", lambda event: line_numbers.redraw())
 text.bind("<MouseWheel>", lambda event: line_numbers.redraw())
 
 # GUI Main Loop
-
 root.mainloop()
