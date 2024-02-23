@@ -148,8 +148,8 @@ dark_mode = {
     "menu_fg": "#CCCCCC",  # Light grey text color for the menu
 }
 
-# Current mode starts as light mode
-current_mode = "light"
+# Current mode starts as dark mode
+current_mode = "dark"
 
 def toggle_dark_mode():
     global current_mode
