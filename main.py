@@ -149,7 +149,7 @@ dark_mode = {
 }
 
 # Current mode starts as dark mode
-current_mode = "dark"
+current_mode = "light"
 
 def toggle_dark_mode():
     global current_mode
