@@ -126,8 +126,36 @@ def open_find_replace_dialog():
 def add_shortcut(key, func):
     root.bind(key, lambda event: func())
 
+# Theme Based Methods
 
-#### Dark Mode Feature ####
+def toggle_theme():
+    global current_mode
+    modes = ['light', 'dark', 'sepia', 'high_contrast']
+    mode_index = modes.index(current_mode) + 1
+    if mode_index >= len(modes):
+        mode_index = 0
+    current_mode = modes[mode_index]
+    color_scheme = globals()[f"{current_mode}_mode"]
+
+def set_light_mode():
+    global current_mode
+    current_mode = "light"
+    apply_theme(light_mode)
+
+def set_dark_mode():
+    global current_mode
+    current_mode = "dark"
+    apply_theme(dark_mode)
+
+def set_sepia_mode():
+    global current_mode
+    current_mode = "sepia"
+    apply_theme(sepia_mode)
+
+def set_high_contrast_mode():
+    global current_mode
+    current_mode = "high_contrast"
+    apply_theme(high_contrast_mode)
 
 # Color schemes
 light_mode = {
@@ -148,15 +176,29 @@ dark_mode = {
     "menu_fg": "#CCCCCC",  # Light grey text color for the menu
 }
 
+sepia_mode = {
+    "text_bg": "#F4ECE3",  # Warm light background for the text area
+    "text_fg": "#5B4636",  # Dark brown text color
+    "sidebar_bg": "#E4DCCF",  # Light sepia background for line numbers
+    "sidebar_fg": "#5B4636",  # Dark brown color for line numbers
+    "menu_bg": "#E4DCCF",  # Light sepia background for the menu
+    "menu_fg": "#5B4636",  # Dark brown text color for the menu
+}
+
+high_contrast_mode = {
+    "text_bg": "#000000",  # Black background for the text area
+    "text_fg": "#FFFFFF",  # White text color
+    "sidebar_bg": "#FFFFFF",  # White background for line numbers
+    "sidebar_fg": "#000000",  # Black color for line numbers
+    "menu_bg": "#000000",  # Black background for the menu
+    "menu_fg": "#FFFFFF",  # White text color for the menu
+}
+
 # Current mode starts as dark mode
 current_mode = "light"
 
-def toggle_dark_mode():
+def apply_theme(color_scheme):
     global current_mode
-    # Toggle between 'light' and 'dark'
-    current_mode = 'dark' if current_mode == 'light' else 'light'
-    color_scheme = dark_mode if current_mode == 'dark' else light_mode
-    
     # Apply color scheme to text widget and line numbers
     text.config(bg=color_scheme["text_bg"], fg=color_scheme["text_fg"], insertbackground=color_scheme["text_fg"])
     line_numbers.config(bg=color_scheme["sidebar_bg"], fg=color_scheme["sidebar_fg"])
@@ -215,14 +257,25 @@ edit_menu.add_command(label="Find and Replace", command=open_find_replace_dialog
 
 view_menu = tk.Menu(menu, tearoff=0)
 menu.add_cascade(label="View", menu=view_menu)
-view_menu.add_command(label="Toggle Dark Mode", command=toggle_dark_mode)
+# view_menu.add_command(label="Toggle Dark Mode", command=toggle_dark_mode)
+
+# Theme Menu
+
+theme_menu = tk.Menu(menu, tearoff=0)  # Create a new menu for themes
+menu.add_cascade(label="Theme", menu=theme_menu)
+
+theme_menu.add_command(label="Light Mode", command=set_light_mode)
+theme_menu.add_command(label="Dark Mode", command=set_dark_mode)
+theme_menu.add_command(label="Sepia Mode", command=set_sepia_mode)
+theme_menu.add_command(label="High Contrast Mode", command=set_high_contrast_mode)
+
 
 # Line Numbers
 line_numbers = LineNumberCanvas(root, width=30)
 line_numbers.pack(side="left", fill="y")
 
 # Text Area
-text = tk.Text(root, wrap=tk.WORD)
+text = tk.Text(root, wrap=tk.WORD, selectbackground='#D3D3D3')  # Light gray selection background
 text.pack(expand=True, fill="both")
 
 # Enable Undo/Redo Feature
